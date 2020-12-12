@@ -6,11 +6,16 @@ public class movement : MonoBehaviour
 {
     
     Animator animator;
+    [SerializeField] GameObject[] skillParticles;
+    private IEnumerator coroutine;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-
+        for (int i = 0; i < skillParticles.Length; i++)
+        {
+            skillParticles[i].SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -27,6 +32,33 @@ public class movement : MonoBehaviour
         {
             run();
         }
+        if (Input.GetKeyUp(KeyCode.Alpha1)) UseSkill(1);
+        if (Input.GetKeyUp(KeyCode.Alpha2)) UseSkill(2);
+    }
+
+    void UseSkill(int skillNumber) 
+    {
+        animator.SetTrigger("Skill" + skillNumber);
+        skillParticles[skillNumber - 1].SetActive(true);
+
+        switch (skillNumber)
+        {
+            case 1:
+                coroutine = WaitToEnableObject(skillParticles[skillNumber - 1], 5);
+                break;
+            case 2:
+                coroutine = WaitToEnableObject(skillParticles[skillNumber - 1], 5);
+                break;
+        }
+
+        
+        StartCoroutine(coroutine);
+    }
+    
+    IEnumerator WaitToEnableObject(GameObject obj, float time)
+    {
+        yield return new WaitForSeconds(time);
+        obj.SetActive(false);
     }
 
     public void Jump()
