@@ -8,7 +8,8 @@ public class movement : MonoBehaviour
     Animator animator;
     [SerializeField] GameObject[] skillParticles;
     private IEnumerator coroutine;
-
+    [SerializeField] AudioClip[] skillsAudioClips;
+    [SerializeField] AudioSource audioSource;
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -34,13 +35,16 @@ public class movement : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.Alpha1)) UseSkill(1);
         if (Input.GetKeyUp(KeyCode.Alpha2)) UseSkill(2);
+
+
     }
 
-    void UseSkill(int skillNumber) 
+    public void UseSkill(int skillNumber) 
     {
         animator.SetTrigger("Skill" + skillNumber);
         skillParticles[skillNumber - 1].SetActive(true);
-
+        audioSource.clip = skillsAudioClips[skillNumber - 1];
+        audioSource.Play();
         switch (skillNumber)
         {
             case 1:
